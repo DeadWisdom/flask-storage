@@ -10,6 +10,7 @@
 
 import os
 import logging
+import posixpath
 from werkzeug import FileStorage
 from ._compat import urljoin
 
@@ -60,7 +61,10 @@ class BaseStorage(object):
         :param filename: filename for generating the url....
         """
         urlbase = self.config.get('base_url')
-        return urljoin(urlbase, filename)
+        if '://' in urlbase:
+            return urljoin(urlbase, filename)
+        else:
+            return posixpath.join(urlbase, filename)
 
     def extension_allowed(self, extname):
         if self.extensions is None:
@@ -101,7 +105,7 @@ class BaseStorage(object):
     def delete(self, filename):
         raise NotImplementedError
 
-    def save(self, storage, filename):
+    def save(self, storage, filename, force=False):
         raise NotImplementedError
 
 
