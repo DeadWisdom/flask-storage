@@ -20,6 +20,8 @@ backends = {
     'upyun': 'flask_storage.upyun.UpyunStorage',
 }
 
+from _base import UploadNotAllowed, UploadFileExists
+
 
 class Storage(object):
     """Create a storage instance.

@@ -57,12 +57,16 @@ class LocalStorage(BaseStorage):
         dest = os.path.join(self.root, filename)
         return os.remove(dest)
 
-    def save(self, storage, filename, check=True):
+    def save(self, storage, filename, check=True, force=False):
         """Save a storage (`werkzeug.FileStorage`) with the specified
         filename.
 
         :param storage: The storage to be saved.
         :param filename: The destination of the storage.
+        :param check: Check the file extension to see if it's allowed before updating,
+                      will throw UploadNotAllowed if it's not.
+        :param force: Force the file to be uploaded even if one with the same name is 
+                      already there.  Otherwise UploadFileExists may be thrown.
         """
 
         if check:
@@ -74,7 +78,7 @@ class LocalStorage(BaseStorage):
         if not os.path.exists(folder):
             os.makedirs(folder)
 
-        if os.path.exists(dest):
+        if not force and os.path.exists(dest):
             raise UploadFileExists()
 
         storage.save(dest)

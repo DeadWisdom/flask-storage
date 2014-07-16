@@ -52,7 +52,7 @@ class BaseStorage(object):
     def __init__(self, name='base', extensions=None, config=None):
         self.name = name
         self.config = config
-        self.extensions = extensions or IMAGES
+        self.extensions = extensions
 
     def url(self, filename):
         """Generate the url for a filename.
@@ -63,7 +63,7 @@ class BaseStorage(object):
         return urljoin(urlbase, filename)
 
     def extension_allowed(self, extname):
-        if not self.extensions:
+        if self.extensions is None:
             return True
         return extname in self.extensions
 
