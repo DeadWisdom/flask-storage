@@ -71,6 +71,12 @@ class BaseStorage(object):
             return True
         return extname in self.extensions
 
+    def get_extension(self, filename):
+        base, ext = posixpath.splitext(filename)
+        if ext:
+            return ext.lower()[1:]
+        return ''
+
     def check(self, storage):
         """
         Check if the storage can be saved.
@@ -88,8 +94,7 @@ class BaseStorage(object):
         if not isinstance(storage, FileStorage):
             raise TypeError('storage must be a werkzeug.FileStorage')
 
-        _, extname = os.path.splitext(storage.filename)
-        ext = extname.lower()[1:]
+        ext = self.get_extension( storage.filename )
         if not self.extension_allowed(ext):
             raise UploadNotAllowed('Extension not allowed')
 
